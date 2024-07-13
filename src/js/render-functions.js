@@ -1,64 +1,47 @@
-const STORAGE_KEY = 'feedback-form';
+// render-functions.js
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
-const form = document.querySelector('.feedback-form');
+const gallery = document.querySelector('.gallery');
 
-populateForm();
-
-form.addEventListener('submit', handleFormSubmit);
-form.addEventListener('input', handleFormInput);
-
-function handleFormSubmit(event) {
-  event.preventDefault();
-
-  localStorage.removeItem(STORAGE_KEY);
-
-  event.currentTarget.reset();
+export function clearGallery() {
+  gallery.innerHTML = '';
 }
 
-function handleFormInput(event) {
-  const value = event.target.value;
-  const key = event.target.name;
+export function renderImages(images) {
+  const markup = images
+    .map(
+      image => `
+        <a href="${image.largeImageURL}" class="gallery__item">
+            <img src="${image.webformatURL}" alt="${image.tags}" class="gallery__image"/>
+            <div class="info">
+                <p class="info-item"><b>Likes:</b> ${image.likes}</p>
+                <p class="info-item"><b>Views:</b> ${image.views}</p>
+                <p class="info-item"><b>Comments:</b> ${image.comments}</p>
+                <p class="info-item"><b>Downloads:</b> ${image.downloads}</p>
+            </div>
+        </a>
+    `
+    )
+    .join('');
 
-  let savedFeedbackData = {};
-
-  try {
-    savedFeedbackData = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  } catch (err) {
-    console.log(err);
-    return;
-  }
-
-  if (savedFeedbackData) {
-    savedFeedbackData[key] = value;
-  } else {
-    savedFeedbackData = {
-      [key]: value,
-    };
-  }
-
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(savedFeedbackData));
-  } catch (err) {
-    console.log(err);
-    return;
-  }
+  gallery.insertAdjacentHTML('beforeend', markup);
+  const lightbox = new SimpleLightbox('.gallery a', {
+    /* options */
+  });
+  lightbox.refresh();
 }
 
-function populateForm() {
-  let savedFeedbackData = {};
+export function showNotification(message) {
+  iziToast.info({ message, position: 'topRight' });
+}
 
-  try {
-    savedFeedbackData = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  } catch (err) {
-    console.log(err);
-    return;
-  }
+export function showLoader() {
+  document.querySelector('.loader').classList.remove('hidden');
+}
 
-  if (!savedFeedbackData) {
-    return;
-  }
-
-  for (const key in savedFeedbackData) {
-    form.elements[key].value = savedFeedbackData[key];
-  }
+export function hideLoader() {
+  document.querySelector('.loader').classList.add('hidden');
 }

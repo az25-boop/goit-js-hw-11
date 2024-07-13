@@ -1,73 +1,44 @@
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
+import { fetchImages } from './pixabay-api.js';
+import {
+  clearGallery,
+  renderImages,
+  showNotification,
+  showLoader,
+  hideLoader,
+} from './render-functions.js';
+import './styles.css';
 
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
+document.addEventListener('DOMContentLoaded', () => {
+  const searchForm = document.querySelector('#search-form');
+  const searchInput = document.querySelector('#search-input');
 
-document
-  .getElementById('search-form')
-  .addEventListener('submit', async function (e) {
-    e.preventDefault();
+  searchForm.addEventListener('submit', async event => {
+    event.preventDefault();
 
-    const query = document.getElementById('search-query').value.trim();
-
+    const query = searchInput.value.trim();
     if (!query) {
-      iziToast.error({
-        title: 'Error',
-        message: 'Search query cannot be empty!',
-      });
+      showNotification('Please enter a search term!');
       return;
     }
 
-    const gallery = document.getElementById('gallery');
-    gallery.innerHTML = ''; // Очищуємо галерею перед новим пошуком
-
-    const loader = document.getElementById('loader');
-    loader.style.display = 'block'; // Показуємо індикатор завантаження
+    clearGallery();
+    showLoader();
 
     try {
-      const response = await fetch(
-        `https://pixabay.com/api/?key=44852213-a2483cc0047435af0fdb3dda4&q=${query}&image_type=photo&orientation=horizontal&safesearch=true`
-      );
-      const data = await response.json();
-
-      loader.style.display = 'none'; // Сховати індикатор завантаження
-
-      if (data.hits.length === 0) {
-        iziToast.info({
-          title: 'No Results',
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-        });
-        return;
+      const images = await fetchImages(query);
+      if (images.length === 0) {
+        showNotification(
+          'Sorry, there are no images matching your search query. Please try again!'
+        );
+      } else {
+        renderImages(images);
       }
-
-      data.hits.forEach(hit => {
-        const item = document.createElement('a');
-        item.href = hit.largeImageURL;
-        item.classList.add('gallery-item');
-        item.innerHTML = `
-              <img src="${hit.webformatURL}" alt="${hit.tags}">
-              <div class="info">
-                  <p>Likes: ${hit.likes}</p>
-                  <p>Views: ${hit.views}</p>
-                  <p>Comments: ${hit.comments}</p>
-                  <p>Downloads: ${hit.downloads}</p>
-              </div>
-          `;
-        gallery.appendChild(item);
-      });
-
-      const lightbox = new SimpleLightbox('.gallery-item', {
-        /* options */
-      });
-      lightbox.refresh();
     } catch (error) {
-      loader.style.display = 'none'; // Сховати індикатор завантаження
-      iziToast.error({
-        title: 'Error',
-        message:
-          'An error occurred while fetching the images. Please try again later!',
-      });
+      showNotification(
+        'An error occurred while fetching images. Please try again later.'
+      );
+    } finally {
+      hideLoader();
     }
   });
+});
