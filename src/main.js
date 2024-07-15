@@ -1,12 +1,12 @@
-import { fetchImages } from './pixabay-api.js';
+import { fetchImages } from './js/pixabay-api.js';
 import {
   clearGallery,
   renderImages,
   showNotification,
   showLoader,
   hideLoader,
-} from './render-functions.js';
-import './styles.css';
+} from './js/render-functions.js';
+import './css/styles.css';
 
 document.addEventListener('DOMContentLoaded', () => {
   const searchForm = document.querySelector('#search-form');
