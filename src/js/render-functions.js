@@ -15,7 +15,10 @@ export function renderImages(images) {
     .map(
       image => `
         <a href="${image.largeImageURL}" class="gallery__item">
-            <img src="${image.webformatURL}" alt="${image.tags}" class="gallery__image"/>
+            <img 
+            src="${image.webformatURL}" 
+            alt="${image.tags}" 
+            class="gallery__image"/>
             <div class="info">
                 <p class="info-item"><b>Likes:</b> ${image.likes}</p>
                 <p class="info-item"><b>Views:</b> ${image.views}</p>
