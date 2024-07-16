@@ -15,6 +15,3 @@ export async function fetchImages(query) {
   const data = await response.json();
   return data.hits;
 }
-page = 1;
-q = null;
-per_page = 40;
