@@ -7,8 +7,7 @@ export async function fetchImages(query) {
     &q=${query}
     &image_type=photo
     &orientation=horizontal
-    &safesearch=true
-    &per_page=40`
+    &safesearch=true`
   );
   if (!response.ok) {
     throw new Error('Failed to fetch images');
