@@ -71,7 +71,7 @@ export function handlerError(error) {
     default:
       iziToast.error({
         title: 'Error',
-        message: 'Щось пішло не так. Ми працюемо над вирішенням питання!',
+        message: 'It did not go well. We are working on solving the question!',
       });
       break;
   }
