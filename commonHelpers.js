@@ -2,8 +2,7 @@ import{S as l,i as d}from"./assets/vendor-0fc460d7.js";(function(){const r=docum
     &q=${n}
     &image_type=photo
     &orientation=horizontal
-    &safesearch=true
-    &per_page=40`);if(!r.ok)throw new Error("Failed to fetch images");return(await r.json()).hits}const c=document.querySelector(".gallery");function m(){c.innerHTML=""}function h(n){const r=n.map(t=>`
+    &safesearch=true`);if(!r.ok)throw new Error("Failed to fetch images");return(await r.json()).hits}const c=document.querySelector(".gallery");function m(){c.innerHTML=""}function h(n){const r=n.map(t=>`
         <a href="${t.largeImageURL}" class="gallery__item">
             <img 
             src="${t.webformatURL}" 
