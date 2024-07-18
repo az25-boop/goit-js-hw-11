@@ -13,6 +13,6 @@ export async function fetchImages(query) {
     return data.hits;
   } catch (error) {
     console.error('Error fetching images:', error);
-    throw error; // Пробросимо помилку, щоб вона могла бути оброблена у викликаючому коді
+    throw error;
   }
 }
