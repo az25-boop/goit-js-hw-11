@@ -8,20 +8,27 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <header class="header">
-      <div class="container">
-        <form class="form-search js-search-form">
-          <input type="text" class="search-input" name="searchtext" />
-          <button type="submit" class="search-button">Search</button>
-        </form>
-      </div>
-    </header>
-    <main>
-      <div class="container">
-        <span class="js-loader"></span>
-        <ul class="gallery"></ul>
-      </div>
-    </main>
-    <script src="./main.js" type="module"></script>
+    <form id="search-form">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Search for images..."
+        required
+      />
+      <button type="submit">Search</button>
+    </form>
+    <div class="gallery">
+      <a href="images/image1.jpg"
+        ><img src="images/thumbs/thumb1.jpg" alt="" title=""
+      /></a>
+      <a href="images/image2.jpg"
+        ><img src="images/thumbs/thumb2.jpg" alt="" title="Beautiful Image"
+      /></a>
+    </div>
+    <div class="loader hidden">
+
+    <!-- <span class="loader"></span> -->
+
+    <script type="module" src="./main.js"></script>
   </body>
 </html>

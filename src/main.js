@@ -1,39 +1,44 @@
-import { renderCard, refs, handlerError } from './js/render-function';
-import { fetchImage, generateSearchString } from './js/paxabay-api';
+import { fetchImages } from './js/pixabay-api.js';
+import {
+  clearGallery,
+  renderImages,
+  showNotification,
+  showLoader,
+  hideLoader,
+} from './js/render-functions.js';
+import './css/styles.css';
 
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+document.addEventListener('DOMContentLoaded', () => {
+  const searchForm = document.querySelector('#search-form');
+  const searchInput = document.querySelector('#search-input');
 
-refs.searchForm.addEventListener('submit', handlerSearchButton);
+  searchForm.addEventListener('submit', async event => {
+    event.preventDefault();
 
-function handlerSearchButton(event) {
-  event.preventDefault();
-  const searchText = event.target.searchtext.value;
-  if (!searchText) {
-    handlerError('outdata');
-    return;
-  }
-  refs.gallery.innerHTML = '';
-  refs.loader.classList.add('loader');
-  fetchImage(generateSearchString(searchText))
-    .then(image => {
-      refs.loader.classList.remove('loader');
-      if (image.totalHits === 0) {
-        handlerError('nodata');
-        return;
+    const query = searchInput.value.trim();
+    if (!query) {
+      showNotification('Please enter a search term!');
+      return;
+    }
+
+    clearGallery();
+    showLoader();
+
+    try {
+      const images = await fetchImages(query);
+      if (images.length === 0) {
+        showNotification(
+          'Sorry, there are no images matching your search query. Please try again!'
+        );
+      } else {
+        renderImages(images);
       }
-      refs.gallery.insertAdjacentHTML('beforeend', renderCard(image.hits));
-      galleryBigImage.refresh();
-    })
-    .catch(error => {
-      refs.loader.classList.remove('loader');
-      handlerError(error);
-    })
-    .finally(refs.searchForm.reset());
-}
-const galleryBigImage = new SimpleLightbox('.gallery a', {
-  captionDelay: 250,
-  overlayOpacity: 0.8,
-  scrollZoom: false,
+    } catch (error) {
+      showNotification(
+        'An error occurred while fetching images. Please try again later.'
+      );
+    } finally {
+      hideLoader();
+    }
+  });
 });
-galleryBigImage.on('show.simplelightbox', function () {});
