@@ -24,21 +24,23 @@ document.addEventListener('DOMContentLoaded', () => {
     clearGallery();
     showLoader();
 
-    try {
-      const images = await fetchImages(query);
-      if (images.length === 0) {
+    fetchImages(query)
+      .then(images => {
+        if (images.length === 0) {
+          showNotification(
+            'Sorry, there are no images matching your search query. Please try again!'
+          );
+        } else {
+          renderImages(images);
+        }
+      })
+      .catch(error => {
         showNotification(
-          'Sorry, there are no images matching your search query. Please try again!'
+          'An error occurred while fetching images. Please try again later.'
         );
-      } else {
-        renderImages(images);
-      }
-    } catch (error) {
-      showNotification(
-        'An error occurred while fetching images. Please try again later.'
-      );
-    } finally {
-      hideLoader();
-    }
+      })
+      .finally(() => {
+        hideLoader();
+      });
   });
 });
