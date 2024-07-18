@@ -1,8 +1,8 @@
-// render-functions.js
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import 'loaders.css/loaders.css';
 
 const gallery = document.querySelector('.gallery');
 
@@ -31,6 +31,7 @@ export function renderImages(images) {
     .join('');
 
   gallery.insertAdjacentHTML('beforeend', markup);
+
   const lightbox = new SimpleLightbox('.gallery a', {
     captions: true,
     captionSelector: 'img',
